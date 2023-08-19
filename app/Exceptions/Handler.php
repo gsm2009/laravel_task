@@ -27,4 +27,12 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    /**
+     * 自定义render ，统一异常json格式
+     */
+    public function render($request, Throwable $exception)
+    {
+        return app(\App\Exceptions\ApiExceptionHandler::class)->render($request, $exception);
+    }
 }
