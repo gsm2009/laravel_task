@@ -11,7 +11,8 @@ class ApiExceptionHandler extends ExceptionHandler
     {
 
         // 将异常转换为 JSON 格式
-        $statusCode = method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 500;
+        $statusCode = method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : '';
+        $statusCode = ($statusCode !== '') ? $statusCode : ($exception->statusCode ? $exception->statusCode : 500);
         $responseData = [];
 
         $responseData = [
