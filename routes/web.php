@@ -19,7 +19,13 @@ Route::get('/get_req', function (Request $request) {
     return $request->all();
 });
 
-Route::get('/get_expected_error', 'HomeController@index');
+Route::get('/expected_error', function (Request $request) {
+    $validation_error = \Illuminate\Validation\ValidationException::withMessages([
+        'Validation failed'
+    ]);
+    $validation_error->statusCode = 401;
+    throw $validation_error;
+});
 
 Route::get('/unexpected_error', function (Request $request) {
     new john();
