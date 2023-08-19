@@ -6,8 +6,9 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\LogRequest as LogRecord;
-class LogRequest
+use Illuminate\Support\Facades\Log;
 
+class LogRequest
 {
     /**
      * Handle an incoming request.
@@ -16,12 +17,13 @@ class LogRequest
      */
     public function handle($request, Closure $next)
     {
-        
-            $response = $next($request);
+
+        $response = $next($request);
+        try {
             $log = [];
-            $log['url']    = $request->fullUrl();
+            $log['url'] = $request->fullUrl();
             $log['method'] = $request->method();
-            $log['request_data'] = json_encode( $request->all());
+            $log['request_data'] = json_encode($request->all());
             $data = $response->original;
             $statusCode = $response->status();
             $responseData = [
@@ -33,6 +35,10 @@ class LogRequest
 
             $LogRecord = new LogRecord;
             $LogRecord->setTable()->create($log);
-            return $response;
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+            Log::info(json_encode($log));
+        }
+        return $response;
     }
 }

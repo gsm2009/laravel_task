@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use App\Models\LogException;
+use Illuminate\Support\Facades\Log;
 
 class Handler extends ExceptionHandler
 {
@@ -34,7 +35,8 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $exception)
     {
-        if ($this->shouldReport($exception)) {
+
+        try {
             $logException = new LogException();
             $log_data = [
                 'message' => $exception->getMessage(),
@@ -44,6 +46,9 @@ class Handler extends ExceptionHandler
                 'created_at' => date("Y-m-d H:i:s"),
             ];
             $logException->setTable()->create($log_data);
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+            Log::info(json_encode($log_data));
         }
         parent::report($exception);
     }
