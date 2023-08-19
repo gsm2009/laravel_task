@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+Route::get('/get_req', function (Request $request) {
+    return $request->all();
+});
+
+Route::get('/get_expected_error', 'HomeController@index');
+
+Route::get('/get_unexpected_error', function (Request $request) {
+    new john();
+    return $request->all();
 });
