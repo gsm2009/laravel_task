@@ -20,7 +20,12 @@ Route::get('/get_req', function (Request $request) {
 
 Route::get('/get_expected_error', 'HomeController@index');
 
-Route::get('/get_unexpected_error', function (Request $request) {
+Route::get('/unexpected_error', function (Request $request) {
     new john();
     return $request->all();
+});
+
+Route::get('/valid_bracket', function (Request $request) {
+    $s = $request->get('s');
+    return isValidBracket($s);
 });
