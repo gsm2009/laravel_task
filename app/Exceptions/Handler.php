@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use App\Models\LogException;
 
 class Handler extends ExceptionHandler
 {
@@ -26,6 +27,25 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * 记录错误日志
+     */
+    public function report(Throwable $exception)
+    {
+        if ($this->shouldReport($exception)) {
+            $logException = new LogException();
+            $log_data = [
+                'message' => $exception->getMessage(),
+                'code' => $exception->getCode(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'created_at' => date("Y-m-d H:i:s"),
+            ];
+            $logException->setTable()->create($log_data);
+        }
+        parent::report($exception);
     }
 
     /**

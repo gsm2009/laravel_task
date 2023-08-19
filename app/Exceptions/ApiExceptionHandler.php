@@ -18,6 +18,15 @@ class ApiExceptionHandler extends ExceptionHandler
             'statusCode' => $statusCode,
             'message' => $exception->getMessage(),
         ];
+
+        if ($_SERVER['APP_DEBUG'] == 'true') {
+            $responseData['trace'] = $exception->getTrace();
+        }
+
+        if ($statusCode == 500 && $_SERVER['APP_DEBUG'] == 'false') {
+            $responseData['message'] = 'Internal Server Error';
+        }
+
         // 设置响应的 Content-Type 为 application/json
         return response()->json($responseData, $statusCode);
     }
