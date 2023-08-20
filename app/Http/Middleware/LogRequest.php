@@ -26,6 +26,7 @@ class LogRequest
             $log['request_data'] = json_encode($request->all());
             $data = $response->original;
             $statusCode = $response->status();
+            $data['statusCode'] = $statusCode;
             $responseData = [
                 'status' => $statusCode >= 200 && $statusCode < 300 ? 'success' : 'error',
                 'data' => $data,

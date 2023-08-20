@@ -20,6 +20,7 @@ class ForceJsonResponse
         // 将响应转换为 JSON 格式
         $data = $response->original;
         $statusCode = $response->status();
+        $data['statusCode'] = $statusCode;
         $responseData = [
             'status' => $statusCode >= 200 && $statusCode < 300 ? 'success' : 'error',
             'data' => $data,
